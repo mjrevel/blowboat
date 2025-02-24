@@ -7,9 +7,37 @@ var prev_state: ImageTexture
 var curr_state: ImageTexture
 var shader_material: ShaderMaterial
 var time = 0.0
+var left_height_map: Array[int]
+var right_height_map: Array[float]
 var height_map: Array[float]
+var formula_map: Array[float]
 var vertex_index: int = 0
 var dimensions: Vector2
+var wave_index: int = 1
+
+var wave_1_index: int = 1
+var wave_2_index: int = 1
+var wave_size: int = 100;
+
+var wave_1_amp_map: Array[float]
+var wave_1_speed_map: Array[float]
+var wave_1_num_map: Array[float]
+var wave_1_angfreq_map: Array[float]
+
+var init_wave_1_amp: float = 1.0
+var init_wave_1_speed: float = 1.0
+var init_wave_1_num: float = 1.0
+var init_wave_1_angfreq: float = 1.0
+
+var wave_2_amp_map: Array[float]
+var wave_2_speed_map: Array[float]
+var wave_2_num_map: Array[float]
+var wave_2_angfreq_map: Array[float]
+
+var init_wave_2_amp: float = 1.0
+var init_wave_2_speed: float = 1.0
+var init_wave_2_num: float = 1.0
+var init_wave_2_angfreq: float = 1.0
 
 # Create a local rendering device.
 var rd := RenderingServer.create_local_rendering_device()
@@ -86,8 +114,23 @@ func _ready():
 	var shader = shader_load_math()
 	shader_math_compute(shader)
 	
-	for i in range(0, 100):
+	for i in range(0, wave_size):
+		left_height_map.append(0)
+		right_height_map.append(0)
 		height_map.append(i)
+		formula_map.append(0)
+		
+		wave_1_amp_map.append(0)
+		wave_1_speed_map.append(0)
+		wave_1_num_map.append(0)
+		wave_1_angfreq_map.append(0)
+		
+		wave_2_amp_map.append(0)
+		wave_2_speed_map.append(0)
+		wave_2_num_map.append(0)
+		wave_2_angfreq_map.append(0)
+		
+	wave_2_index = wave_size - 2;
 		
 	dimensions = mesh.get_size()
 	
@@ -113,18 +156,75 @@ func _process(delta):
 	var boundary_left = sin(time * 100.0) # Example: f1(t) = sin(t)
 	var boundary_right = cos(time) # Example: f2(t) = cos(t)
 	
-	for i in height_map.size():
-		if i == 0:
-			#height_map[i] = 1
-			height_map[i] = randi_range(0, 50)
-		else:
-			#height_map[i] = height_map[i - 1] + 1
-			height_map[i] = randi_range(0, 50)
+	#for i in height_map.size():
+		##height_map[i] = 3*sin(.5 * i - 5 * time) + 5*sin(.2 * i - 3 * -time)
+		#height_map[i] = 3*sin(.5 * i - 5 * -time) + 5*sin(.2 * i - 3 * time)
+		
+	left_height_map[0] = 1
+	right_height_map[0] = 5*sin(.2 * 0 - 3 * time)
+	
+	if wave_index > 0:
+		left_height_map[wave_index] = left_height_map[wave_index - 1]
+	
+#	use different wave equation based on initial wave parameters
+	match left_height_map[wave_index]:
+		0:
+			height_map[wave_index] = 5*sin(.2 * 0 - 3 * time)
+		1:
+			height_map[wave_index] = 6*sin(.3 * 0 - 4 * time)
+	
+	#height_map[wave_index] = left_height_map[wave_index] + right_height_map[wave_index]
+	#height_map[wave_index] = left_height_map[wave_index]
+	
+	wave_1_amp_map[0] = init_wave_1_amp
+	wave_1_speed_map[0] = 1.0
+	wave_1_num_map[0] = 0.3
+	wave_1_angfreq_map[0] = 3.0
+	
+	wave_2_amp_map[wave_size - 1] = init_wave_2_amp
+	wave_2_speed_map[wave_size - 1] = 1.0
+	wave_2_num_map[wave_size - 1] = 0.3
+	wave_2_angfreq_map[wave_size - 1] = 3.0
+	
+	if wave_index > 0:
+		wave_1_amp_map[wave_index] = wave_1_amp_map[wave_index - 1]
+		wave_1_speed_map[wave_index] = wave_1_speed_map[wave_index - 1]
+		wave_1_num_map[wave_index] = wave_1_num_map[wave_index - 1]
+		wave_1_angfreq_map[wave_index] = wave_1_angfreq_map[wave_index - 1]
+	
+	if wave_2_index < (wave_size - 1):
+		wave_2_amp_map[wave_2_index] = wave_2_amp_map[wave_2_index + 1]
+		wave_2_speed_map[wave_2_index] = wave_2_speed_map[wave_2_index + 1]
+		wave_2_num_map[wave_2_index] = wave_2_num_map[wave_2_index + 1]
+		wave_2_angfreq_map[wave_2_index] = wave_2_angfreq_map[wave_2_index + 1]
+		
+	if wave_index < height_map.size() - 1:
+		wave_index += 1
+	else:
+		wave_index = 1
+		
+	if wave_2_index > 0:
+		wave_2_index -= 1
+	else:
+		wave_2_index = wave_size - 2;
 			
 	#print(height_map)
 	
 	prev_state = prepare_image() # update image on the cpu every render
-		
+	
+	shader_material.set_shader_parameter("wave_1_amp", wave_1_amp_map)
+	shader_material.set_shader_parameter("wave_1_speed", wave_1_speed_map)
+	shader_material.set_shader_parameter("wave_1_num", wave_1_num_map)
+	shader_material.set_shader_parameter("wave_1_angfreq", wave_1_angfreq_map)
+	
+	shader_material.set_shader_parameter("wave_2_amp", wave_2_amp_map)
+	shader_material.set_shader_parameter("wave_2_speed", wave_2_speed_map)
+	shader_material.set_shader_parameter("wave_2_num", wave_2_num_map)
+	shader_material.set_shader_parameter("wave_2_angfreq", wave_2_angfreq_map)
+	
+	shader_material.set_shader_parameter("wave_time", time)
+	
+	
 	shader_material.set_shader_parameter("dimensions", dimensions)
 	shader_material.set_shader_parameter("height_map", height_map)
 	shader_material.set_shader_parameter("time", time)
@@ -142,3 +242,18 @@ func get_height(world_position: Vector3) -> float:
 #
 	#var pixel_pos = Vector2(uv_x * noise.get_width(), uv_y * noise.get_height())
 	#return global_position.y + noise.get_pixelv(pixel_pos).r * height_scale;
+
+
+func _on_button_pressed() -> void:
+	init_wave_1_amp = 0.5
+	init_wave_2_amp = 1.5
+
+
+func _on_button_2_pressed() -> void:
+	init_wave_1_amp = 1.0
+	init_wave_2_amp = 0.5
+
+
+func _on_button_3_pressed() -> void:
+	init_wave_1_amp = 1.5
+	init_wave_2_amp = 1.0

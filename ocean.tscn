@@ -21,17 +21,23 @@ glow_enabled = true
 render_priority = 0
 shader = ExtResource("2_bb1ww")
 shader_parameter/w = 0.5
-shader_parameter/time = null
 shader_parameter/boundary_left = null
 shader_parameter/boundary_right = null
 shader_parameter/resolution = null
-shader_parameter/wave_time = 0.0
-shader_parameter/wave_speed = 2.0
 shader_parameter/noise_scale = 10.0
-shader_parameter/height_scale = 0.15
+shader_parameter/height_scale = 0.001
 shader_parameter/height_map = null
 shader_parameter/vertex_index = null
 shader_parameter/dimensions = null
+shader_parameter/wave_1_amp = null
+shader_parameter/wave_1_speed = null
+shader_parameter/wave_1_num = null
+shader_parameter/wave_1_angfreq = null
+shader_parameter/wave_2_amp = null
+shader_parameter/wave_2_speed = null
+shader_parameter/wave_2_num = null
+shader_parameter/wave_2_angfreq = null
+shader_parameter/wave_time = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_gjhbn"]
 material = SubResource("ShaderMaterial_of3cw")
@@ -56,3 +62,44 @@ script = ExtResource("3_tj3eo")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.95424, 0.299041, 0, -0.299041, 0.95424, 0, 1.03531, 8.1558)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Node2D" type="Node2D" parent="CanvasLayer"]
+position = Vector2(0, 648)
+
+[node name="Button" type="Button" parent="CanvasLayer/Node2D"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -56.0
+offset_right = 86.0
+offset_bottom = -14.0
+grow_vertical = 0
+text = "1"
+
+[node name="Button2" type="Button" parent="CanvasLayer/Node2D"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 88.0
+offset_top = -56.0
+offset_right = 166.0
+offset_bottom = -14.0
+grow_vertical = 0
+text = "2"
+
+[node name="Button3" type="Button" parent="CanvasLayer/Node2D"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 168.0
+offset_top = -56.0
+offset_right = 246.0
+offset_bottom = -14.0
+grow_vertical = 2
+text = "3"
+
+[connection signal="pressed" from="CanvasLayer/Node2D/Button" to="Water" method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Node2D/Button2" to="Water" method="_on_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/Node2D/Button3" to="Water" method="_on_button_3_pressed"]
