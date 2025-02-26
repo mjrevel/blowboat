@@ -72,34 +72,45 @@ position = Vector2(0, 648)
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
+offset_left = 128.0
 offset_top = -56.0
-offset_right = 86.0
+offset_right = 206.0
 offset_bottom = -14.0
 grow_vertical = 0
 text = "1"
+metadata/_edit_use_anchors_ = true
 
 [node name="Button2" type="Button" parent="CanvasLayer/Node2D"]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 88.0
+offset_left = 208.0
 offset_top = -56.0
-offset_right = 166.0
+offset_right = 286.0
 offset_bottom = -14.0
 grow_vertical = 0
 text = "2"
+metadata/_edit_use_anchors_ = true
 
 [node name="Button3" type="Button" parent="CanvasLayer/Node2D"]
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_left = 168.0
+offset_left = 288.0
 offset_top = -56.0
-offset_right = 246.0
+offset_right = 366.0
 offset_bottom = -14.0
 grow_vertical = 2
 text = "3"
+metadata/_edit_use_anchors_ = true
+
+[node name="Button4" type="Button" parent="CanvasLayer/Node2D"]
+offset_left = 48.0
+offset_top = -56.0
+offset_right = 112.0
+offset_bottom = -16.0
+text = "Fire"
 
 [connection signal="pressed" from="CanvasLayer/Node2D/Button" to="Water" method="_on_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Node2D/Button2" to="Water" method="_on_button_2_pressed"]
 [connection signal="pressed" from="CanvasLayer/Node2D/Button3" to="Water" method="_on_button_3_pressed"]
+[connection signal="pressed" from="CanvasLayer/Node2D/Button4" to="Water" method="_on_button_4_pressed"]

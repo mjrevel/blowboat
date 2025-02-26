@@ -39,6 +39,8 @@ var init_wave_2_speed: float = 1.0
 var init_wave_2_num: float = 1.0
 var init_wave_2_angfreq: float = 1.0
 
+var wave_launch: bool = false
+
 # Create a local rendering device.
 var rd := RenderingServer.create_local_rendering_device()
 
@@ -176,15 +178,28 @@ func _process(delta):
 	#height_map[wave_index] = left_height_map[wave_index] + right_height_map[wave_index]
 	#height_map[wave_index] = left_height_map[wave_index]
 	
-	wave_1_amp_map[0] = init_wave_1_amp
-	wave_1_speed_map[0] = 1.0
-	wave_1_num_map[0] = 0.3
-	wave_1_angfreq_map[0] = 3.0
-	
-	wave_2_amp_map[wave_size - 1] = init_wave_2_amp
-	wave_2_speed_map[wave_size - 1] = 1.0
-	wave_2_num_map[wave_size - 1] = 0.3
-	wave_2_angfreq_map[wave_size - 1] = 3.0
+	if wave_launch == true:
+		wave_1_amp_map[0] = init_wave_1_amp
+		wave_1_speed_map[0] = 1.0
+		wave_1_num_map[0] = 3
+		wave_1_angfreq_map[0] = 3.0
+		
+		wave_2_amp_map[wave_size - 1] = init_wave_2_amp
+		wave_2_speed_map[wave_size - 1] = 1.0
+		wave_2_num_map[wave_size - 1] = 2
+		wave_2_angfreq_map[wave_size - 1] = 3.0
+		
+		#wave_launch = false
+	else:
+		wave_1_amp_map[0] = 0
+		wave_1_speed_map[0] = 0
+		wave_1_num_map[0] = 0
+		wave_1_angfreq_map[0] = 0
+		
+		wave_2_amp_map[wave_size - 1] = 0
+		wave_2_speed_map[wave_size - 1] = 0
+		wave_2_num_map[wave_size - 1] = 0
+		wave_2_angfreq_map[wave_size - 1] = 0
 	
 	if wave_index > 0:
 		wave_1_amp_map[wave_index] = wave_1_amp_map[wave_index - 1]
@@ -257,3 +272,9 @@ func _on_button_2_pressed() -> void:
 func _on_button_3_pressed() -> void:
 	init_wave_1_amp = 1.5
 	init_wave_2_amp = 1.0
+
+func _on_button_4_pressed() -> void:
+	if wave_launch == true:
+		wave_launch = false
+	else:
+		wave_launch = true
