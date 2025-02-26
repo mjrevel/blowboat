@@ -40,6 +40,7 @@ var init_wave_2_num: float = 1.0
 var init_wave_2_angfreq: float = 1.0
 
 var wave_launch: bool = false
+var wave_delay: int = 0
 
 # Create a local rendering device.
 var rd := RenderingServer.create_local_rendering_device()
@@ -137,7 +138,6 @@ func _ready():
 	dimensions = mesh.get_size()
 	
 func _physics_process(delta: float) -> void:
-	pass
 	#if not is_on_floor():
 		#velocity += get_gravity() * delta
 		
@@ -151,6 +151,57 @@ func _physics_process(delta: float) -> void:
 		#
 	#material.set_shader_parameter("left_speed", left_speed)
 	#material.set_shader_parameter("left_toggle", left_toggle)
+	if wave_launch == true:
+		wave_1_amp_map[0] = init_wave_1_amp
+		wave_1_speed_map[0] = 1.0
+		wave_1_num_map[0] = 3
+		wave_1_angfreq_map[0] = 3.0
+		
+		wave_2_amp_map[wave_size - 1] = init_wave_2_amp
+		wave_2_speed_map[wave_size - 1] = 1.0
+		wave_2_num_map[wave_size - 1] = 2
+		wave_2_angfreq_map[wave_size - 1] = 3.0
+		
+		wave_delay += 1
+		
+		if wave_delay == 120:
+			wave_launch = false
+			print("wave disabled")
+			#wave_delay = 0
+	else:
+		wave_1_amp_map[0] = 0
+		wave_1_speed_map[0] = 0
+		wave_1_num_map[0] = 0
+		wave_1_angfreq_map[0] = 0
+		
+		wave_2_amp_map[wave_size - 1] = 0
+		wave_2_speed_map[wave_size - 1] = 0
+		wave_2_num_map[wave_size - 1] = 0
+		wave_2_angfreq_map[wave_size - 1] = 0
+	
+	if wave_index > 0:
+		wave_1_amp_map[wave_index] = wave_1_amp_map[wave_index - 1]
+		wave_1_speed_map[wave_index] = wave_1_speed_map[wave_index - 1]
+		wave_1_num_map[wave_index] = wave_1_num_map[wave_index - 1]
+		wave_1_angfreq_map[wave_index] = wave_1_angfreq_map[wave_index - 1]
+	
+	if wave_2_index < (wave_size - 1):
+		wave_2_amp_map[wave_2_index] = wave_2_amp_map[wave_2_index + 1]
+		wave_2_speed_map[wave_2_index] = wave_2_speed_map[wave_2_index + 1]
+		wave_2_num_map[wave_2_index] = wave_2_num_map[wave_2_index + 1]
+		wave_2_angfreq_map[wave_2_index] = wave_2_angfreq_map[wave_2_index + 1]
+		
+	if wave_index < wave_size - 1:
+		wave_index += 1
+	else:
+		wave_index = 1
+		
+	if wave_2_index > 0:
+		wave_2_index -= 1
+	else:
+		wave_2_index = wave_size - 2;
+			
+	#print(height_map)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -178,52 +229,7 @@ func _process(delta):
 	#height_map[wave_index] = left_height_map[wave_index] + right_height_map[wave_index]
 	#height_map[wave_index] = left_height_map[wave_index]
 	
-	if wave_launch == true:
-		wave_1_amp_map[0] = init_wave_1_amp
-		wave_1_speed_map[0] = 1.0
-		wave_1_num_map[0] = 3
-		wave_1_angfreq_map[0] = 3.0
-		
-		wave_2_amp_map[wave_size - 1] = init_wave_2_amp
-		wave_2_speed_map[wave_size - 1] = 1.0
-		wave_2_num_map[wave_size - 1] = 2
-		wave_2_angfreq_map[wave_size - 1] = 3.0
-		
-		#wave_launch = false
-	else:
-		wave_1_amp_map[0] = 0
-		wave_1_speed_map[0] = 0
-		wave_1_num_map[0] = 0
-		wave_1_angfreq_map[0] = 0
-		
-		wave_2_amp_map[wave_size - 1] = 0
-		wave_2_speed_map[wave_size - 1] = 0
-		wave_2_num_map[wave_size - 1] = 0
-		wave_2_angfreq_map[wave_size - 1] = 0
-	
-	if wave_index > 0:
-		wave_1_amp_map[wave_index] = wave_1_amp_map[wave_index - 1]
-		wave_1_speed_map[wave_index] = wave_1_speed_map[wave_index - 1]
-		wave_1_num_map[wave_index] = wave_1_num_map[wave_index - 1]
-		wave_1_angfreq_map[wave_index] = wave_1_angfreq_map[wave_index - 1]
-	
-	if wave_2_index < (wave_size - 1):
-		wave_2_amp_map[wave_2_index] = wave_2_amp_map[wave_2_index + 1]
-		wave_2_speed_map[wave_2_index] = wave_2_speed_map[wave_2_index + 1]
-		wave_2_num_map[wave_2_index] = wave_2_num_map[wave_2_index + 1]
-		wave_2_angfreq_map[wave_2_index] = wave_2_angfreq_map[wave_2_index + 1]
-		
-	if wave_index < height_map.size() - 1:
-		wave_index += 1
-	else:
-		wave_index = 1
-		
-	if wave_2_index > 0:
-		wave_2_index -= 1
-	else:
-		wave_2_index = wave_size - 2;
-			
-	#print(height_map)
+
 	
 	prev_state = prepare_image() # update image on the cpu every render
 	

@@ -41,11 +41,12 @@ shader_parameter/wave_time = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_gjhbn"]
 material = SubResource("ShaderMaterial_of3cw")
-size = Vector2(10, 10)
-subdivide_width = 100
-subdivide_depth = 100
+size = Vector2(50, 50)
+subdivide_width = 200
+subdivide_depth = 200
 
 [node name="Ocean" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0309868, 0, 0.0127411)
 script = ExtResource("1_4hhkq")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -61,7 +62,7 @@ mesh = SubResource("PlaneMesh_gjhbn")
 script = ExtResource("3_tj3eo")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.95424, 0.299041, 0, -0.299041, 0.95424, 0, 1.03531, 8.1558)
+transform = Transform3D(1, 0, 0, 0, 0.95424, 0.299041, 0, -0.299041, 0.95424, 0, 2.39911, 11.1005)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
