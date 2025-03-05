@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1hpa3kij1vb7"]
+[gd_scene load_steps=10 format=3 uid="uid://b1hpa3kij1vb7"]
 
 [ext_resource type="Script" path="res://ocean.gd" id="1_4hhkq"]
 [ext_resource type="Shader" path="res://water.gdshader" id="2_bb1ww"]
 [ext_resource type="Script" path="res://water.gd" id="3_tj3eo"]
+[ext_resource type="PackedScene" uid="uid://dtudsdckvhfi1" path="res://player.tscn" id="4_r7j02"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mirtv"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -21,8 +22,6 @@ glow_enabled = true
 render_priority = 0
 shader = ExtResource("2_bb1ww")
 shader_parameter/w = 0.5
-shader_parameter/boundary_left = null
-shader_parameter/boundary_right = null
 shader_parameter/resolution = null
 shader_parameter/noise_scale = 10.0
 shader_parameter/height_scale = 0.001
@@ -37,13 +36,15 @@ shader_parameter/wave_2_amp = null
 shader_parameter/wave_2_speed = null
 shader_parameter/wave_2_num = null
 shader_parameter/wave_2_angfreq = null
+shader_parameter/wave_combined = null
+shader_parameter/cpu_calc = null
 shader_parameter/wave_time = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_gjhbn"]
 material = SubResource("ShaderMaterial_of3cw")
 size = Vector2(50, 50)
-subdivide_width = 200
-subdivide_depth = 200
+subdivide_width = 100
+subdivide_depth = 100
 
 [node name="Ocean" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0309868, 0, 0.0127411)
@@ -57,7 +58,6 @@ transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -
 shadow_enabled = true
 
 [node name="Water" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.662752, 0)
 mesh = SubResource("PlaneMesh_gjhbn")
 script = ExtResource("3_tj3eo")
 
@@ -110,6 +110,10 @@ offset_top = -56.0
 offset_right = 112.0
 offset_bottom = -16.0
 text = "Fire"
+
+[node name="Player" parent="." instance=ExtResource("4_r7j02")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.093326, 1.49446, 4.37954)
+mass = 1.0
 
 [connection signal="pressed" from="CanvasLayer/Node2D/Button" to="Water" method="_on_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Node2D/Button2" to="Water" method="_on_button_2_pressed"]

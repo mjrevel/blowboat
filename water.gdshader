@@ -4,8 +4,6 @@ varying vec3 world_pos;
 varying float height;
 uniform float w = 0.5;
 
-uniform float boundary_left; // Boundary condition f1(t)
-uniform float boundary_right; // Boundary condition f2(t)
 uniform vec2 resolution; // Resolution of the string (number of points)
 
 uniform sampler2D prev_state; // Texture storing the previous state
@@ -34,7 +32,8 @@ uniform float wave_2_amp[SUBDIV];
 uniform float wave_2_speed[SUBDIV];
 uniform float wave_2_num[SUBDIV];
 uniform float wave_2_angfreq[SUBDIV];
-
+uniform float wave_combined[SUBDIV];
+uniform bool cpu_calc;
 
 uniform float wave_time = 0;
 varying float wave_result;
@@ -44,7 +43,7 @@ float map(float x, float in_min, float in_max, float out_min, float out_max) {
 }
 
 float wave_data(float amp, float pos, float speed, float num, float freq, float time) {
-	return amp * sin(num * pos - freq * time);
+	return amp * sin(num * pos + freq * time);
 }
 
 int vertex_to_index(float position, float dimension) {
@@ -67,8 +66,17 @@ void vertex() {
 
 	int index_pos = vertex_to_index(VERTEX.x, dimensions.x);
 
-	float wave_1 = wave_data(wave_1_amp[index_pos], VERTEX.x, wave_1_speed[index_pos], wave_1_num[index_pos], wave_1_angfreq[index_pos], TIME);
-	float wave_2 = wave_data(wave_2_amp[index_pos], VERTEX.x, wave_2_speed[index_pos], wave_2_num[index_pos], wave_2_angfreq[index_pos], -TIME);
+	float wave_1;
+	float wave_2;
+
+	if(cpu_calc == false) {
+		wave_1 = wave_data(wave_1_amp[index_pos], VERTEX.x, wave_1_speed[index_pos], wave_1_num[index_pos], wave_1_angfreq[index_pos], TIME);
+		wave_2 = wave_data(wave_2_amp[index_pos], VERTEX.x, wave_2_speed[index_pos], wave_2_num[index_pos], wave_2_angfreq[index_pos], -TIME);
+	} else {
+		wave_1 = wave_combined[index_pos];
+		wave_2 = 0.0; // Waves are combined so no need for this result
+	}
+
 	VERTEX.y += wave_1 + wave_2;
 	//VERTEX.y += wave_data(3.0, VERTEX.x, 1.0, 0.3, 3.0, TIME);
 

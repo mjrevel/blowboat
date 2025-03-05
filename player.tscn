@@ -3,34 +3,54 @@
 [ext_resource type="Script" path="res://player.gd" id="1_60y3i"]
 [ext_resource type="Texture2D" uid="uid://bqd0puot837r5" path="res://bangormakerspace.png" id="1_imf8o"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boysq"]
+albedo_texture = ExtResource("1_imf8o")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ow77c"]
 albedo_texture = ExtResource("1_imf8o")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8tjy4"]
 albedo_texture = ExtResource("1_imf8o")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_boysq"]
-albedo_texture = ExtResource("1_imf8o")
-
-[node name="Player" type="CharacterBody3D"]
+[node name="Boat" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00460911, -0.0112009, 0.00459194)
+mass = 10.0
 script = ExtResource("1_60y3i")
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.276513, 0.462388, -2.00741)
-material_override = SubResource("StandardMaterial3D_ow77c")
-size = Vector3(0.543823, 0.537598, 0.0581055)
-material = SubResource("StandardMaterial3D_8tjy4")
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.304614, 0)
+use_collision = true
 
-[node name="CSGSphere3D2" type="CSGSphere3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.489707, -2)
+[node name="bottom" type="CSGSphere3D" parent="CSGCombiner3D"]
 radius = 1.0
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="CSGSphere3D2"]
+[node name="buttom_sub" type="CSGSphere3D" parent="CSGCombiner3D/bottom"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0840879, 0)
 material_override = SubResource("StandardMaterial3D_boysq")
 operation = 2
 radius = 1.0
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00950108, -0.2588, -2.0018)
+[node name="ProbeContainer" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.102494, 0)
+
+[node name="TopRight" type="Marker3D" parent="ProbeContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.253118, 0.5)
+
+[node name="TopLeft" type="Marker3D" parent="ProbeContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.253, -0.5)
+
+[node name="BackRight" type="Marker3D" parent="ProbeContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.253, 0.5)
+
+[node name="BackLeft" type="Marker3D" parent="ProbeContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.504809, -0.253, -0.499439)
+
+[node name="flag" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.276513, 1.25671, 0)
+material_override = SubResource("StandardMaterial3D_ow77c")
+size = Vector3(0.543823, 0.537598, 0.0581055)
+material = SubResource("StandardMaterial3D_8tjy4")
+
+[node name="pole" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00950108, 0.535521, 0)
 radius = 0.0345411

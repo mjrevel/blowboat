@@ -14,3 +14,7 @@ config/name="BlowBoat"
 run/main_scene="res://ocean.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+RelicHelper="*res://relic_helper.gd"
