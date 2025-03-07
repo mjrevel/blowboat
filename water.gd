@@ -127,6 +127,8 @@ func wave_lerp(value: float, stop_at: float) -> float:
 #func cpu_wave_calc():
 
 func wave_data(delta: float):
+	var decay_rate = .1
+	
 	if wave_launch == true:
 		wave_1_amp_map[0] = init_wave_1_amp
 		wave_1_speed_map[0] = init_wave_1_speed
@@ -146,15 +148,15 @@ func wave_data(delta: float):
 			#wave_delay = 0
 	else:
 		#wave_1_amp_map[0] = RelicHelper.local_lerp(init_wave_1_amp, 0, phys_time, .5)
-		wave_1_amp_map[0] = wave_lerp(wave_1_amp_map[0] - delta * .1, 0)
-		#wave_1_speed_map[0] = 0
-		#wave_1_num_map[0] = 0
-		#wave_1_angfreq_map[0] = 0
+		wave_1_amp_map[0] = wave_lerp(wave_1_amp_map[0] - delta * decay_rate, 0)
+		wave_1_speed_map[0] = wave_lerp(wave_1_speed_map[0] - delta * decay_rate, 0)
+		wave_1_num_map[0] = wave_lerp(wave_1_num_map[0] - delta * decay_rate, 0)
+		wave_1_angfreq_map[0] = wave_lerp(wave_1_angfreq_map[0] - delta * decay_rate, 0)
 		
 		wave_2_amp_map[wave_size - 1] = wave_lerp(wave_2_amp_map[wave_size - 1] - delta * .1, 0)
-		#wave_2_speed_map[wave_size - 1] = 0
-		#wave_2_num_map[wave_size - 1] = 0
-		#wave_2_angfreq_map[wave_size - 1] = 0
+		wave_2_speed_map[wave_size - 1] = wave_lerp(wave_2_speed_map[wave_size - 1] - delta * decay_rate, 0)
+		wave_2_num_map[wave_size - 1] = wave_lerp(wave_2_num_map[wave_size - 1] - delta * decay_rate, 0)
+		wave_2_angfreq_map[wave_size - 1] = wave_lerp(wave_2_angfreq_map[wave_size - 1] - delta * decay_rate, 0)
 	
 	if wave_index > 0:
 		wave_1_amp_map[wave_index] = wave_1_amp_map[wave_index - 1]
@@ -381,8 +383,9 @@ func _on_button_3_pressed() -> void:
 	init_wave_2_angfreq = 5.0
 
 func _on_button_4_pressed() -> void:
-	wave_launch = true
-	#if wave_launch == true:
-		#wave_launch = false
-	#else:
-		#wave_launch = true
+	#wave_launch = true
+	if wave_launch == true:
+		wave_launch = false
+	else:
+		wave_launch = true
+	DebugDraw2D.set_text("Wave: {0}".format([wave_launch]))

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b1hpa3kij1vb7"]
+[gd_scene load_steps=13 format=3 uid="uid://b1hpa3kij1vb7"]
 
 [ext_resource type="Script" path="res://ocean.gd" id="1_4hhkq"]
 [ext_resource type="Shader" path="res://water.gdshader" id="2_bb1ww"]
@@ -15,8 +15,10 @@ sky_material = SubResource("ProceduralSkyMaterial_mirtv")
 [sub_resource type="Environment" id="Environment_nrdrd"]
 background_mode = 2
 sky = SubResource("Sky_jqijq")
+sky_custom_fov = 120.0
 tonemap_mode = 2
 glow_enabled = true
+fog_sun_scatter = 2.25
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_of3cw"]
 render_priority = 0
@@ -42,9 +44,18 @@ shader_parameter/wave_time = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_gjhbn"]
 material = SubResource("ShaderMaterial_of3cw")
-size = Vector2(50, 50)
+size = Vector2(100, 50)
 subdivide_width = 100
 subdivide_depth = 100
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_epsh4"]
+albedo_color = Color(0.933333, 0.627451, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n38eh"]
+albedo_color = Color(0.580346, 0.588174, 0.933547, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qd41y"]
+material = SubResource("StandardMaterial3D_n38eh")
 
 [node name="Ocean" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0309868, 0, 0.0127411)
@@ -54,7 +65,7 @@ script = ExtResource("1_4hhkq")
 environment = SubResource("Environment_nrdrd")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+transform = Transform3D(0.142629, -0.748126, -0.648047, 0, -0.654741, 0.755853, -0.989776, -0.107807, -0.093385, 0.0398331, -9.53674e-07, 0.00163651)
 shadow_enabled = true
 
 [node name="Water" type="MeshInstance3D" parent="."]
@@ -63,6 +74,7 @@ script = ExtResource("3_tj3eo")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.95424, 0.299041, 0, -0.299041, 0.95424, 0, 2.39911, 11.1005)
+fov = 60.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -113,7 +125,16 @@ text = "Fire"
 
 [node name="Player" parent="." instance=ExtResource("4_r7j02")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.093326, 1.49446, 4.37954)
-mass = 1.0
+
+[node name="island" type="CSGSphere3D" parent="."]
+transform = Transform3D(84.0053, 0, 0, 0, 10.4714, 0, 0, 0, 23.0997, -51.972, -1.92513, -30.9538)
+material = SubResource("StandardMaterial3D_epsh4")
+
+[node name="simplewater" type="MeshInstance3D" parent="."]
+transform = Transform3D(29.2433, 0, 0, 0, 1, 0, 0, 0, 17.3667, 0, 0, -42.385)
+visible = false
+mesh = SubResource("PlaneMesh_qd41y")
+skeleton = NodePath("../Water")
 
 [connection signal="pressed" from="CanvasLayer/Node2D/Button" to="Water" method="_on_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Node2D/Button2" to="Water" method="_on_button_2_pressed"]

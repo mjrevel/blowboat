@@ -14,7 +14,6 @@ albedo_texture = ExtResource("1_imf8o")
 
 [node name="Boat" type="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00460911, -0.0112009, 0.00459194)
-mass = 10.0
 script = ExtResource("1_60y3i")
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
@@ -34,16 +33,16 @@ radius = 1.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.102494, 0)
 
 [node name="TopRight" type="Marker3D" parent="ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.253118, 0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.253118, 0.5)
 
 [node name="TopLeft" type="Marker3D" parent="ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.253, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.253, -0.5)
 
 [node name="BackRight" type="Marker3D" parent="ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.253, 0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.253, 0.5)
 
 [node name="BackLeft" type="Marker3D" parent="ProbeContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.504809, -0.253, -0.499439)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.253, -0.499439)
 
 [node name="flag" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.276513, 1.25671, 0)
