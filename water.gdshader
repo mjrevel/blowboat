@@ -38,12 +38,22 @@ uniform bool cpu_calc;
 uniform float wave_time = 0;
 varying float wave_result;
 
+//Variable declarations.
+uniform float water_sharpness: hint_range(0.0, 1.0) = 0.45;
+uniform float height_modifier = 1.0;
+uniform vec3 darkening_color : source_color = vec3(0.1,0.2,0.2);
+uniform vec3 source_color_modifier : source_color = vec3(1.,1.,1.);
+uniform float max_metallic: hint_range(0.0, 1.0) = 1.0;
+uniform float max_specular: hint_range(0.0, 1.0) = 1.0;
+
+varying vec3 pos;
+
 float map(float x, float in_min, float in_max, float out_min, float out_max) {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-float wave_data(float amp, float pos, float speed, float num, float freq, float time) {
-	return amp * sin(num * pos + freq * time);
+float wave_data(float amp, float ppos, float speed, float num, float freq, float time) {
+	return amp * sin(num * ppos + freq * time);
 }
 
 int vertex_to_index(float position, float dimension) {
@@ -55,7 +65,7 @@ void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	local_pos = (MODEL_MATRIX * vec4(VERTEX, 100.0)).xyz;
 	clip_space = (MODEL_MATRIX * VIEW_MATRIX * PROJECTION_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	int pos = int(floor(world_pos.x * float(SUBDIV)));
+	//int pos = int(floor(world_pos.x * float(SUBDIV)));
 
 	//height = texture(wave, world_pos.xz / noise_scale + wave_time * wave_speed).r;
 
@@ -78,6 +88,10 @@ void vertex() {
 	}
 
 	VERTEX.y += wave_1 + wave_2;
+	
+    pos = mat3(MODEL_MATRIX) * -VERTEX;
+    pos = pos - NODE_POSITION_WORLD;
+	
 	//VERTEX.y += wave_data(3.0, VERTEX.x, 1.0, 0.3, 3.0, TIME);
 
 
@@ -92,8 +106,12 @@ void vertex() {
 }
 
 void fragment() {
-	ALBEDO = vec3(0.2, 0.2, 0.8);
-	ALPHA = 0.9;
+	ALBEDO = mix(vec3(1.,1.,1.), vec3(0.1,0.2,0.6), clamp(pow(pos.y+height_modifier, water_sharpness), 0.9, 1.));
+	//METALLIC = clamp(pow(pos.y+height_modifier, water_sharpness), 0., 1.);
+	//SPECULAR = clamp(pow(pos.y+height_modifier, water_sharpness), 0., 1.);
+	
+	//ALBEDO = vec3(0.2, 0.2, 0.8);
+	//ALPHA = 0.9;
 	// Called for every pixel the material is visible on.
 }
 

@@ -41,6 +41,12 @@ shader_parameter/wave_2_angfreq = null
 shader_parameter/wave_combined = null
 shader_parameter/cpu_calc = null
 shader_parameter/wave_time = 0.0
+shader_parameter/water_sharpness = 0.45
+shader_parameter/height_modifier = 2.0
+shader_parameter/darkening_color = Color(0.1, 0.2, 0.2, 1)
+shader_parameter/source_color_modifier = Color(1, 1, 1, 1)
+shader_parameter/max_metallic = 1.0
+shader_parameter/max_specular = 1.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_gjhbn"]
 material = SubResource("ShaderMaterial_of3cw")
@@ -69,6 +75,7 @@ transform = Transform3D(0.142629, -0.748126, -0.648047, 0, -0.654741, 0.755853, 
 shadow_enabled = true
 
 [node name="Water" type="MeshInstance3D" parent="."]
+cast_shadow = 0
 mesh = SubResource("PlaneMesh_gjhbn")
 script = ExtResource("3_tj3eo")
 
