@@ -19,7 +19,7 @@ varying vec3 pos;
 
 
 //Find the Y POSITION in the world (water is usually flat).
-void vertex() {	
+void vertex() {
     pos = mat3(MODEL_MATRIX) * -VERTEX;
     pos = pos - NODE_POSITION_WORLD;
 }

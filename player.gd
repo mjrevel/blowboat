@@ -3,7 +3,7 @@ extends RigidBody3D
 const SPEED = 5.0
 var submerged := false
 
-@export var float_force := 1.3
+@export var float_force := 2.0
 @export var speed_multiplier := 1.0
 @export var water_drag := 0.05
 @export var water_angular_drag := 0.5

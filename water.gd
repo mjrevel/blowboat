@@ -282,13 +282,12 @@ func _process(delta):
 	shader_material.set_shader_parameter("wave_2_num", wave_2_num_map)
 	shader_material.set_shader_parameter("wave_2_angfreq", wave_2_angfreq_map)
 	
-	shader_material.set_shader_parameter("wave_time", phys_time)
 	shader_material.set_shader_parameter("wave_combined", wave_combined_map)
 	shader_material.set_shader_parameter("cpu_calc", cpu_calc)
 	
 	shader_material.set_shader_parameter("dimensions", dimensions)
 	shader_material.set_shader_parameter("height_map", height_map)
-	shader_material.set_shader_parameter("time", phys_time)
+	shader_material.set_shader_parameter("wave_time", phys_time)
 	shader_material.set_shader_parameter("wave_speed", wave_speed)
 	shader_material.set_shader_parameter("resolution", resolution)
 	shader_material.set_shader_parameter("prev_state", prev_state)
@@ -317,7 +316,7 @@ func get_height(world_position: Vector3) -> float:
 						, wave_2_speed_map[calc_index]
 						, wave_2_num_map[calc_index]
 						, wave_2_angfreq_map[calc_index]
-						, phys_time)
+						, -phys_time)
 	#var wave_height = wave_1_amp_map[calc_index] + wave_2_amp_map[calc_index]
 	#DebugDraw2D.set_text("get_heght: {0}".format([wave_height]))
 	#amp * sin(num * pos + freq * time);
@@ -357,6 +356,10 @@ func _on_button_pressed() -> void:
 	init_wave_2_speed = randf_range(0.0, 5.0)
 	init_wave_2_num = randf_range(0.0, 1.0)
 	init_wave_2_angfreq = randf_range(0.0, 5.0)
+	
+	$"../CanvasLayer/Control/Expression".update_equation(init_wave_1_amp
+											, init_wave_1_num
+											, init_wave_2_angfreq)
 
 
 func _on_button_2_pressed() -> void:
