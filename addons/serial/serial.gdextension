@@ -1,0 +1,5 @@
+[configuration]
+entry_symbol = "serial_ext_init"
+compatibility_minimum = 4.1
+[libraries]
+linux.x86_64 = "bin/libserial_ext.linux.x86_64.so"
