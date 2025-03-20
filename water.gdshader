@@ -65,7 +65,7 @@ float map(float x, float in_min, float in_max, float out_min, float out_max) {
 }
 
 float wave_data(float amp, float ppos, float sspeed, float num, float freq, float time) {
-	return amp * sin(num * ppos + freq * time);
+	return amp * sin(num * ppos - freq * time);
 }
 
 int vertex_to_index(float position, float dimension) {

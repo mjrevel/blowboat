@@ -3,6 +3,9 @@ extends MeshInstance3D
 @export var wave_speed = 1.0
 @export var resolution = Vector2(1024, 1024)
 
+var exp1
+var exp2
+
 var prev_state: ImageTexture
 var curr_state: ImageTexture
 var shader_material: ShaderMaterial
@@ -20,25 +23,27 @@ var wave_1_index: int = 1
 var wave_2_index: int = 1
 @onready var wave_size: int = 100;
 
+var decay_rate: float
+
 var wave_1_amp_map: Array[float]
 var wave_1_speed_map: Array[float]
 var wave_1_num_map: Array[float]
 var wave_1_angfreq_map: Array[float]
 
-var init_wave_1_amp: float = 1.0
-var init_wave_1_speed: float = 1.0
-var init_wave_1_num: float = 1.0
-var init_wave_1_angfreq: float = 1.0
+var init_wave_1_amp: float = 0.5
+var init_wave_1_speed: float = 0.5
+var init_wave_1_num: float = 0.5
+var init_wave_1_angfreq: float = 3.0
 
 var wave_2_amp_map: Array[float]
 var wave_2_speed_map: Array[float]
 var wave_2_num_map: Array[float]
 var wave_2_angfreq_map: Array[float]
 
-var init_wave_2_amp: float = 1.0
-var init_wave_2_speed: float = 1.0
-var init_wave_2_num: float = 1.0
-var init_wave_2_angfreq: float = 1.0
+var init_wave_2_amp: float = 0.5
+var init_wave_2_speed: float = 0.5
+var init_wave_2_num: float = 0.5
+var init_wave_2_angfreq: float = 3.0
 
 var wave_combined_map: Array[float]
 var cpu_calc: bool = false
@@ -114,6 +119,7 @@ func shader_math_compute(shader: RID):
 	print("Input: ", input)
 	print("Output: ", output)
 
+# Wave dissipation over time
 func wave_lerp(value: float, stop_at: float) -> float:
 	var result = stop_at
 	
@@ -127,7 +133,7 @@ func wave_lerp(value: float, stop_at: float) -> float:
 #func cpu_wave_calc():
 
 func wave_data(delta: float):
-	var decay_rate = .1
+	decay_rate = .1
 	
 	if wave_launch == true:
 		wave_1_amp_map[0] = init_wave_1_amp
@@ -151,12 +157,12 @@ func wave_data(delta: float):
 		wave_1_amp_map[0] = wave_lerp(wave_1_amp_map[0] - delta * decay_rate, 0)
 		wave_1_speed_map[0] = wave_lerp(wave_1_speed_map[0] - delta * decay_rate, 0)
 		wave_1_num_map[0] = wave_lerp(wave_1_num_map[0] - delta * decay_rate, 0)
-		wave_1_angfreq_map[0] = wave_lerp(wave_1_angfreq_map[0] - delta * decay_rate, 0)
+		wave_1_angfreq_map[0] = wave_lerp(wave_1_angfreq_map[0] - delta * .4, 0)
 		
 		wave_2_amp_map[wave_size - 1] = wave_lerp(wave_2_amp_map[wave_size - 1] - delta * .1, 0)
 		wave_2_speed_map[wave_size - 1] = wave_lerp(wave_2_speed_map[wave_size - 1] - delta * decay_rate, 0)
 		wave_2_num_map[wave_size - 1] = wave_lerp(wave_2_num_map[wave_size - 1] - delta * decay_rate, 0)
-		wave_2_angfreq_map[wave_size - 1] = wave_lerp(wave_2_angfreq_map[wave_size - 1] - delta * decay_rate, 0)
+		wave_2_angfreq_map[wave_size - 1] = wave_lerp(wave_2_angfreq_map[wave_size - 1] - delta * .4, 0)
 	
 	if wave_index > 0:
 		wave_1_amp_map[wave_index] = wave_1_amp_map[wave_index - 1]
@@ -181,7 +187,8 @@ func wave_data(delta: float):
 		wave_2_index = wave_size - 2;
 			
 	#print(height_map)
-	
+
+# Need to disable gshader creating sin wave if using this code
 func cpu_render(time: float):
 	var wave_1: float;
 	var wave_2: float;
@@ -196,8 +203,10 @@ func cpu_render(time: float):
 func _ready():
 	shader_material = mesh.surface_get_material(0)
 	
-	var shader = shader_load_math()
-	shader_math_compute(shader)
+	# ---- Compute shader code ----
+	#var shader = shader_load_math()
+	#shader_math_compute(shader)
+	# ---- Compute shader code END ----
 	
 	for i in range(0, wave_size):
 		left_height_map.append(0)
@@ -220,6 +229,10 @@ func _ready():
 	wave_2_index = wave_size - 2;
 		
 	dimensions = mesh.get_size()
+	
+	exp1 = $"../CanvasLayer/LeftPanel/Expression"
+	exp2 = $"../CanvasLayer/RightPanel/Expression2"
+	update_display_params()
 	
 func _physics_process(delta: float) -> void:
 	phys_time += delta
@@ -294,8 +307,9 @@ func _process(delta):
 	shader_material.set_shader_parameter("curr_state", curr_state)
 
 func wave_calc(amp: float, pos: float, speed: float, num: float, freq: float, time: float) -> float:
-	return amp * sin(num * pos + freq * time)
+	return amp * sin(num * pos - freq * time)
 
+# Get wave amplitude, used in player code
 # this works as long as water is in center of world
 func get_height(world_position: Vector3) -> float:
 	var calc_index = int(floor(RelicHelper.map(
@@ -330,12 +344,19 @@ func get_height(world_position: Vector3) -> float:
 	#var pixel_pos = Vector2(uv_x * noise.get_width(), uv_y * noise.get_height())
 	#return global_position.y + noise.get_pixelv(pixel_pos).r * height_scale;
 
-func get_speed(world_position: Vector3) -> float:
+# Get wave angular freq, used in player code
+func get_wave_1_speed(world_position: Vector3) -> float:
 	var wave_1 = wave_1_angfreq_map[int(floor(RelicHelper.map(
 							world_position.x
 							, -dimensions.x
 							, dimensions.x
 							, 0.0, wave_size - 1)))]
+							
+	#DebugDraw2D.set_text("{0} @ {1}".format([wave_1, wave_2]))
+	
+	return wave_1
+	
+func get_wave_2_speed(world_position: Vector3) -> float:
 	var wave_2 = wave_2_angfreq_map[int(floor(RelicHelper.map(
 							world_position.x
 							, -dimensions.x
@@ -344,7 +365,7 @@ func get_speed(world_position: Vector3) -> float:
 							
 	#DebugDraw2D.set_text("{0} @ {1}".format([wave_1, wave_2]))
 	
-	return wave_1 - wave_2
+	return wave_2
 
 func _on_button_pressed() -> void:
 	init_wave_1_amp = randf_range(0.0, 1.0)
@@ -357,7 +378,7 @@ func _on_button_pressed() -> void:
 	init_wave_2_num = randf_range(0.0, 1.0)
 	init_wave_2_angfreq = randf_range(0.0, 5.0)
 	
-	$"../CanvasLayer/Control/Expression".update_equation(init_wave_1_amp
+	$"../CanvasLayer/LeftPanel/Expression".update_equation(init_wave_1_amp
 											, init_wave_1_num
 											, init_wave_2_angfreq)
 
@@ -392,3 +413,111 @@ func _on_button_4_pressed() -> void:
 	else:
 		wave_launch = true
 	DebugDraw2D.set_text("Wave: {0}".format([wave_launch]))
+
+func _on_amp_up_btn_pressed() -> void:
+	var prev_val = init_wave_1_amp
+	prev_val = float(prev_val) + .1
+	prev_val = snapped(clampf(prev_val, 0, 1), .1)
+	init_wave_1_amp = prev_val
+	
+	update_display_params()
+
+func _on_amp_dwn_btn_pressed() -> void:
+	var prev_val = init_wave_1_amp
+	prev_val = float(prev_val) - .1
+	prev_val = snapped(clampf(prev_val, 0, 1), .1)
+	init_wave_1_amp = prev_val
+	
+	update_display_params()
+
+func _on_wl_up_btn_pressed() -> void:
+	var prev_val = init_wave_1_num
+	prev_val = float(prev_val) + .1
+	prev_val = snapped(clampf(prev_val, 0, 1), .1)
+	init_wave_1_num = prev_val
+	
+	update_display_params()
+
+func _on_wl_dwn_btn_pressed() -> void:
+	var prev_val = init_wave_1_num
+	prev_val = float(prev_val) - .1
+	prev_val = snapped(clampf(prev_val, 0, 1), .1)
+	init_wave_1_num = prev_val
+	
+	update_display_params()
+
+func _on_ang_up_btn_pressed() -> void:
+	var prev_val = init_wave_1_angfreq
+	prev_val = float(prev_val) + .2
+	prev_val = snapped(clampf(prev_val, 0, 5), .1)
+	init_wave_1_angfreq = prev_val
+	
+	update_display_params()
+
+func _on_ang_dwn_btn_pressed() -> void:
+	var prev_val = init_wave_1_angfreq
+	prev_val = float(prev_val) - .2
+	prev_val = snapped(clampf(prev_val, 0, 5), .1)
+	init_wave_1_angfreq = prev_val
+	
+	update_display_params()
+
+func _on_amp2_up_btn_pressed() -> void:
+	var prev_val = init_wave_2_amp
+	prev_val = float(prev_val) + .1
+	prev_val = snapped(clampf(prev_val, 0, 1), .1)
+	init_wave_2_amp = prev_val
+	
+	update_display_params()
+
+func _on_amp2_dwn_btn_pressed() -> void:
+	var prev_val = init_wave_2_amp
+	prev_val = float(prev_val) - .1
+	prev_val = snapped(clampf(prev_val, 0, 1), .1)
+	init_wave_2_amp = prev_val
+	
+	update_display_params()
+
+func _on_wl2_up_btn_pressed() -> void:
+	var prev_val = init_wave_2_num
+	prev_val = float(prev_val) + .1
+	prev_val = snapped(clampf(prev_val, 0, 1), .1)
+	init_wave_2_num = prev_val
+	
+	update_display_params()
+
+func _on_wl2_dwn_btn_pressed() -> void:
+	var prev_val = init_wave_2_num
+	prev_val = float(prev_val) - .1
+	prev_val = snapped(clampf(prev_val, 0, 1), .1)
+	init_wave_2_num = prev_val
+	
+	update_display_params()
+
+func _on_ang2_up_btn_pressed() -> void:
+	var prev_val = init_wave_2_angfreq
+	prev_val = float(prev_val) + .2
+	prev_val = snapped(clampf(prev_val, 0, 5), .1)
+	init_wave_2_angfreq = prev_val
+	
+	update_display_params()
+
+func _on_ang2_dwn_btn_pressed() -> void:
+	var prev_val = init_wave_2_angfreq
+	prev_val = float(prev_val) - .2
+	prev_val = snapped(clampf(prev_val, 0, 5), .1)
+	init_wave_2_angfreq = prev_val
+	
+	update_display_params()
+
+func update_display_params():
+	$"../CanvasLayer/LeftPanel/AmpContainer/RichTextLabel2".text = str(init_wave_1_amp)
+	$"../CanvasLayer/LeftPanel/WaveLengthContainer/RichTextLabel2".text = str(init_wave_1_num)
+	$"../CanvasLayer/LeftPanel/AngFreqContainer/RichTextLabel2".text = str(init_wave_1_angfreq)
+	
+	$"../CanvasLayer/RightPanel/AmpContainer2/RichTextLabel2".text = str(init_wave_2_amp)
+	$"../CanvasLayer/RightPanel/WaveLengthContainer2/RichTextLabel2".text = str(init_wave_2_num)
+	$"../CanvasLayer/RightPanel/AngFreqContainer2/RichTextLabel2".text = str(init_wave_2_angfreq)
+
+	exp1.update_equation(init_wave_1_amp, init_wave_1_num, init_wave_1_angfreq)
+	exp2.update_equation(init_wave_2_amp, init_wave_2_num, init_wave_2_angfreq) #  # Replace with function body.

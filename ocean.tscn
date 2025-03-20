@@ -99,70 +99,311 @@ fov = 60.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Control" type="Control" parent="CanvasLayer"]
+[node name="LeftPanel" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -648.0
-offset_right = 1152.0
+offset_top = -176.0
+offset_right = 480.0
 grow_vertical = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="CanvasLayer/Control"]
+[node name="Line2D" type="Line2D" parent="CanvasLayer/LeftPanel"]
+script = ExtResource("4_6obuo")
+
+[node name="AmpContainer" type="VBoxContainer" parent="CanvasLayer/LeftPanel"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 88.0
-offset_top = -58.0
-offset_right = 152.0
-offset_bottom = -16.0
+offset_left = 10.0
+offset_top = -134.0
+offset_right = 98.0
+offset_bottom = -10.0
 grow_vertical = 0
-text = "1"
 
-[node name="Button2" type="Button" parent="CanvasLayer/Control"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftPanel/AmpContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Amplitude"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AmpUpBtn" type="Button" parent="CanvasLayer/LeftPanel/AmpContainer"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/LeftPanel/AmpContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AmpDwnBtn" type="Button" parent="CanvasLayer/LeftPanel/AmpContainer"]
+layout_mode = 2
+text = "v"
+
+[node name="WaveLengthContainer" type="VBoxContainer" parent="CanvasLayer/LeftPanel"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 160.0
-offset_top = -58.0
-offset_right = 224.0
-offset_bottom = -16.0
+offset_left = 109.0
+offset_top = -134.0
+offset_right = 201.0
+offset_bottom = -10.0
 grow_vertical = 0
-text = "2"
 
-[node name="Button3" type="Button" parent="CanvasLayer/Control"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftPanel/WaveLengthContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Wavelength"
+fit_content = true
+autowrap_mode = 0
+
+[node name="WLUpBtn" type="Button" parent="CanvasLayer/LeftPanel/WaveLengthContainer"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/LeftPanel/WaveLengthContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="WLDwnBtn" type="Button" parent="CanvasLayer/LeftPanel/WaveLengthContainer"]
+layout_mode = 2
+text = "v"
+
+[node name="AngFreqContainer" type="VBoxContainer" parent="CanvasLayer/LeftPanel"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 232.0
-offset_top = -58.0
-offset_right = 296.0
-offset_bottom = -16.0
+offset_left = 215.0
+offset_top = -157.0
+offset_right = 303.0
+offset_bottom = -10.0
 grow_vertical = 0
-text = "3"
 
-[node name="Button4" type="Button" parent="CanvasLayer/Control"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftPanel/AngFreqContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Angular
+Frequency"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AngUpBtn" type="Button" parent="CanvasLayer/LeftPanel/AngFreqContainer"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/LeftPanel/AngFreqContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AngDwnBtn" type="Button" parent="CanvasLayer/LeftPanel/AngFreqContainer"]
+layout_mode = 2
+text = "v"
+
+[node name="Expression" type="Node2D" parent="CanvasLayer/LeftPanel"]
+position = Vector2(312, 43)
+script = ExtResource("5_ml3rf")
+
+[node name="CenterPanel" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -124.0
+offset_top = -128.0
+offset_right = 124.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Button4" type="Button" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -64.0
+offset_right = 32.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Fire"
+
+[node name="Button" type="Button" parent="CanvasLayer/CenterPanel"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
-offset_top = -56.0
+offset_top = -122.0
 offset_right = 80.0
-offset_bottom = -16.0
+offset_bottom = -80.0
 grow_vertical = 0
-text = "Fire"
+text = "1"
 
-[node name="Line2D" type="Line2D" parent="CanvasLayer/Control"]
-script = ExtResource("4_6obuo")
+[node name="Button2" type="Button" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 88.0
+offset_top = -122.0
+offset_right = 152.0
+offset_bottom = -80.0
+grow_vertical = 0
+text = "2"
 
-[node name="Expression" type="Node2D" parent="CanvasLayer/Control"]
-position = Vector2(320, 560)
+[node name="Button3" type="Button" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 160.0
+offset_top = -122.0
+offset_right = 224.0
+offset_bottom = -80.0
+grow_vertical = 0
+text = "3"
+
+[node name="RightPanel" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_top = -176.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="AmpContainer2" type="VBoxContainer" parent="CanvasLayer/RightPanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -288.0
+offset_top = -132.0
+offset_right = -200.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightPanel/AmpContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Amplitude"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AmpUpBtn" type="Button" parent="CanvasLayer/RightPanel/AmpContainer2"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightPanel/AmpContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AmpDwnBtn" type="Button" parent="CanvasLayer/RightPanel/AmpContainer2"]
+layout_mode = 2
+text = "v"
+
+[node name="WaveLengthContainer2" type="VBoxContainer" parent="CanvasLayer/RightPanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -194.0
+offset_top = -132.0
+offset_right = -102.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightPanel/WaveLengthContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Wavelength"
+fit_content = true
+autowrap_mode = 0
+
+[node name="WLUpBtn" type="Button" parent="CanvasLayer/RightPanel/WaveLengthContainer2"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightPanel/WaveLengthContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="WLDwnBtn" type="Button" parent="CanvasLayer/RightPanel/WaveLengthContainer2"]
+layout_mode = 2
+text = "v"
+
+[node name="AngFreqContainer2" type="VBoxContainer" parent="CanvasLayer/RightPanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -96.0
+offset_top = -155.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightPanel/AngFreqContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Angular
+Frequency"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AngUpBtn" type="Button" parent="CanvasLayer/RightPanel/AngFreqContainer2"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightPanel/AngFreqContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AngDwnBtn" type="Button" parent="CanvasLayer/RightPanel/AngFreqContainer2"]
+layout_mode = 2
+text = "v"
+
+[node name="Expression2" type="Node2D" parent="CanvasLayer/RightPanel"]
+position = Vector2(38, 43)
 script = ExtResource("5_ml3rf")
 
 [node name="Player" parent="." instance=ExtResource("4_r7j02")]
@@ -178,7 +419,19 @@ visible = false
 mesh = SubResource("PlaneMesh_qd41y")
 skeleton = NodePath("../Water")
 
-[connection signal="pressed" from="CanvasLayer/Control/Button" to="Water" method="_on_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/Button2" to="Water" method="_on_button_2_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/Button3" to="Water" method="_on_button_3_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/Button4" to="Water" method="_on_button_4_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/AmpContainer/AmpUpBtn" to="Water" method="_on_amp_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/AmpContainer/AmpDwnBtn" to="Water" method="_on_amp_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/WaveLengthContainer/WLUpBtn" to="Water" method="_on_wl_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/WaveLengthContainer/WLDwnBtn" to="Water" method="_on_wl_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/AngFreqContainer/AngUpBtn" to="Water" method="_on_ang_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/AngFreqContainer/AngDwnBtn" to="Water" method="_on_ang_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/Button4" to="Water" method="_on_button_4_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/Button" to="Water" method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/Button2" to="Water" method="_on_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/Button3" to="Water" method="_on_button_3_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/AmpContainer2/AmpUpBtn" to="Water" method="_on_amp2_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/AmpContainer2/AmpDwnBtn" to="Water" method="_on_amp2_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/WaveLengthContainer2/WLUpBtn" to="Water" method="_on_wl2_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/WaveLengthContainer2/WLDwnBtn" to="Water" method="_on_wl2_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/AngFreqContainer2/AngUpBtn" to="Water" method="_on_ang2_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/AngFreqContainer2/AngDwnBtn" to="Water" method="_on_ang2_dwn_btn_pressed"]

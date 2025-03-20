@@ -10,5 +10,5 @@ func _ready() -> void:
 	#add_point(Vector2(100, 200))
 	#add_point(Vector2(200, 500))
 	
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	pass
