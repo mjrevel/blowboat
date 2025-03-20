@@ -407,12 +407,29 @@ func _on_button_3_pressed() -> void:
 	init_wave_2_angfreq = 5.0
 
 func _on_button_4_pressed() -> void:
-	#wave_launch = true
-	if wave_launch == true:
-		wave_launch = false
-	else:
-		wave_launch = true
-	DebugDraw2D.set_text("Wave: {0}".format([wave_launch]))
+	wave_launch = true
+	#if wave_launch == true:
+		#wave_launch = false
+	#else:
+		#wave_launch = true
+	#DebugDraw2D.set_text("Wave: {0}".format([wave_launch]))
+	
+func _on_reset_btn_pressed() -> void:
+	init_wave_1_amp = 0.5
+	init_wave_1_speed = 0.5
+	init_wave_1_num = 0.5
+	init_wave_1_angfreq = 3.0
+	
+	init_wave_2_amp = 0.5
+	init_wave_2_speed = 0.5
+	init_wave_2_num = 0.5
+	init_wave_2_angfreq = 3.0
+	
+	$"../CanvasLayer/CenterPanel/P1ScoreText".text = str(0)
+	$"../CanvasLayer/CenterPanel/P2ScoreText".text = str(0)
+	
+	wave_launch = false
+
 
 func _on_amp_up_btn_pressed() -> void:
 	var prev_val = init_wave_1_amp
@@ -518,6 +535,6 @@ func update_display_params():
 	$"../CanvasLayer/RightPanel/AmpContainer2/RichTextLabel2".text = str(init_wave_2_amp)
 	$"../CanvasLayer/RightPanel/WaveLengthContainer2/RichTextLabel2".text = str(init_wave_2_num)
 	$"../CanvasLayer/RightPanel/AngFreqContainer2/RichTextLabel2".text = str(init_wave_2_angfreq)
-
+	
 	exp1.update_equation(init_wave_1_amp, init_wave_1_num, init_wave_1_angfreq)
 	exp2.update_equation(init_wave_2_amp, init_wave_2_num, init_wave_2_angfreq) #  # Replace with function body.

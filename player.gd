@@ -15,6 +15,9 @@ var submerged := false
 var p1_data
 var p2_data
 
+var p1_score = 0
+var p2_score = 0
+
 func _ready() -> void:
 	pass
 	
@@ -54,8 +57,12 @@ func _physics_process(delta: float) -> void:
 		
 	if self.global_position.x > 10:
 		self.global_position.x = -9
+		p1_score += 1
+		$"../CanvasLayer/CenterPanel/P1ScoreText".text = str(p1_score)
 	elif self.global_position.x < -10:
 		self.global_position.x = 9
+		p2_score += 1
+		$"../CanvasLayer/CenterPanel/P2ScoreText".text = str(p2_score)
 	
 	DebugDraw2D.set_text("P1:{0}|P2:{1}|Depth:{2}|Speed:{3}".format([p1_data, p2_data, depth, w1_speed]), null, 0, Color.RED, 0)
 	#DebugDraw2D.set_text("P1:{0}|P2:{1}|Depth:{2}|Speed:{3}".format([probes[0].global_position.y, probes[2].global_position.y, depth, w1_speed]), null, 0, Color.RED, 0)

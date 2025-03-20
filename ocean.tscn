@@ -230,22 +230,23 @@ offset_right = 124.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Button4" type="Button" parent="CanvasLayer/CenterPanel"]
+[node name="FireBtn" type="Button" parent="CanvasLayer/CenterPanel"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -32.0
+offset_left = -72.0
 offset_top = -64.0
-offset_right = 32.0
+offset_right = -8.0
 offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Fire"
 
-[node name="Button" type="Button" parent="CanvasLayer/CenterPanel"]
+[node name="TestB1" type="Button" parent="CanvasLayer/CenterPanel"]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -257,7 +258,8 @@ offset_bottom = -80.0
 grow_vertical = 0
 text = "1"
 
-[node name="Button2" type="Button" parent="CanvasLayer/CenterPanel"]
+[node name="TestB2" type="Button" parent="CanvasLayer/CenterPanel"]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -269,7 +271,8 @@ offset_bottom = -80.0
 grow_vertical = 0
 text = "2"
 
-[node name="Button3" type="Button" parent="CanvasLayer/CenterPanel"]
+[node name="TestB3" type="Button" parent="CanvasLayer/CenterPanel"]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -280,6 +283,53 @@ offset_right = 224.0
 offset_bottom = -80.0
 grow_vertical = 0
 text = "3"
+
+[node name="ResetBtn" type="Button" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -64.0
+offset_right = 72.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Reset"
+
+[node name="P1ScoreText" type="RichTextLabel" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -36.0
+offset_top = -112.0
+offset_right = 4.0
+offset_bottom = -88.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+fit_content = true
+
+[node name="P2ScoreText" type="RichTextLabel" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -112.0
+offset_right = 52.0
+offset_bottom = -88.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+fit_content = true
 
 [node name="RightPanel" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -425,10 +475,11 @@ skeleton = NodePath("../Water")
 [connection signal="pressed" from="CanvasLayer/LeftPanel/WaveLengthContainer/WLDwnBtn" to="Water" method="_on_wl_dwn_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/LeftPanel/AngFreqContainer/AngUpBtn" to="Water" method="_on_ang_up_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/LeftPanel/AngFreqContainer/AngDwnBtn" to="Water" method="_on_ang_dwn_btn_pressed"]
-[connection signal="pressed" from="CanvasLayer/CenterPanel/Button4" to="Water" method="_on_button_4_pressed"]
-[connection signal="pressed" from="CanvasLayer/CenterPanel/Button" to="Water" method="_on_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/CenterPanel/Button2" to="Water" method="_on_button_2_pressed"]
-[connection signal="pressed" from="CanvasLayer/CenterPanel/Button3" to="Water" method="_on_button_3_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/FireBtn" to="Water" method="_on_button_4_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/TestB1" to="Water" method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/TestB2" to="Water" method="_on_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/TestB3" to="Water" method="_on_button_3_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/ResetBtn" to="Water" method="_on_reset_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/RightPanel/AmpContainer2/AmpUpBtn" to="Water" method="_on_amp2_up_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/RightPanel/AmpContainer2/AmpDwnBtn" to="Water" method="_on_amp2_dwn_btn_pressed"]
 [connection signal="pressed" from="CanvasLayer/RightPanel/WaveLengthContainer2/WLUpBtn" to="Water" method="_on_wl2_up_btn_pressed"]
