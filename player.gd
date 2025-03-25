@@ -30,6 +30,12 @@ func _physics_process(delta: float) -> void:
 	p1_data = RelicHelper.map(get_parent().get_p1_data(), 0, 1023, 0.0, 10.0)
 	p2_data = RelicHelper.map(get_parent().get_p2_data(), 0, 1023, 0.0, 10.0)
 	
+	if p1_data < 1.0:
+		p1_data = 1.0
+	
+	if p2_data < 1.0:
+		p2_data = 1.0
+	
 	#print(player_data[0])
 	#print("...")
 	
