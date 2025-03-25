@@ -153,16 +153,25 @@ func wave_data(delta: float):
 			#print("wave disabled")
 			#wave_delay = 0
 	else:
-		#wave_1_amp_map[0] = RelicHelper.local_lerp(init_wave_1_amp, 0, phys_time, .5)
-		wave_1_amp_map[0] = wave_lerp(wave_1_amp_map[0] - delta * decay_rate, 0)
-		wave_1_speed_map[0] = wave_lerp(wave_1_speed_map[0] - delta * decay_rate, 0)
-		wave_1_num_map[0] = wave_lerp(wave_1_num_map[0] - delta * decay_rate, 0)
-		wave_1_angfreq_map[0] = wave_lerp(wave_1_angfreq_map[0] - delta * .4, 0)
+		wave_1_amp_map[0] = 0
+		wave_1_speed_map[0] = 0
+		wave_1_num_map[0] = 0
+		wave_1_angfreq_map[0] = 0
 		
-		wave_2_amp_map[wave_size - 1] = wave_lerp(wave_2_amp_map[wave_size - 1] - delta * .1, 0)
-		wave_2_speed_map[wave_size - 1] = wave_lerp(wave_2_speed_map[wave_size - 1] - delta * decay_rate, 0)
-		wave_2_num_map[wave_size - 1] = wave_lerp(wave_2_num_map[wave_size - 1] - delta * decay_rate, 0)
-		wave_2_angfreq_map[wave_size - 1] = wave_lerp(wave_2_angfreq_map[wave_size - 1] - delta * .4, 0)
+		wave_2_amp_map[wave_size - 1] = 0
+		wave_2_speed_map[wave_size - 1] = 0
+		wave_2_num_map[wave_size - 1] = 0
+		wave_2_angfreq_map[wave_size - 1] = 0
+		
+		#wave_1_amp_map[0] = wave_lerp(wave_1_amp_map[0] - delta * decay_rate, 0)
+		#wave_1_speed_map[0] = wave_lerp(wave_1_speed_map[0] - delta * decay_rate, 0)
+		#wave_1_num_map[0] = wave_lerp(wave_1_num_map[0] - delta * decay_rate, 0)
+		#wave_1_angfreq_map[0] = wave_lerp(wave_1_angfreq_map[0] - delta * .4, 0)
+		#
+		#wave_2_amp_map[wave_size - 1] = wave_lerp(wave_2_amp_map[wave_size - 1] - delta * .1, 0)
+		#wave_2_speed_map[wave_size - 1] = wave_lerp(wave_2_speed_map[wave_size - 1] - delta * decay_rate, 0)
+		#wave_2_num_map[wave_size - 1] = wave_lerp(wave_2_num_map[wave_size - 1] - delta * decay_rate, 0)
+		#wave_2_angfreq_map[wave_size - 1] = wave_lerp(wave_2_angfreq_map[wave_size - 1] - delta * .4, 0)
 	
 	if wave_index > 0:
 		wave_1_amp_map[wave_index] = wave_1_amp_map[wave_index - 1]
@@ -415,21 +424,22 @@ func _on_button_4_pressed() -> void:
 	#DebugDraw2D.set_text("Wave: {0}".format([wave_launch]))
 	
 func _on_reset_btn_pressed() -> void:
-	init_wave_1_amp = 0.5
-	init_wave_1_speed = 0.5
-	init_wave_1_num = 0.5
-	init_wave_1_angfreq = 3.0
-	
-	init_wave_2_amp = 0.5
-	init_wave_2_speed = 0.5
-	init_wave_2_num = 0.5
-	init_wave_2_angfreq = 3.0
+	#init_wave_1_amp = 0.5
+	#init_wave_1_speed = 0.5
+	#init_wave_1_num = 0.5
+	#init_wave_1_angfreq = 3.0
+	#
+	#init_wave_2_amp = 0.5
+	#init_wave_2_speed = 0.5
+	#init_wave_2_num = 0.5
+	#init_wave_2_angfreq = 3.0
 	
 	$"../CanvasLayer/CenterPanel/P1ScoreText".text = str(0)
 	$"../CanvasLayer/CenterPanel/P2ScoreText".text = str(0)
-	
 	wave_launch = false
-
+	
+	await get_tree().create_timer(3).timeout
+	$"../Player".global_position.x = 0
 
 func _on_amp_up_btn_pressed() -> void:
 	var prev_val = init_wave_1_amp
