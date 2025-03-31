@@ -6,7 +6,7 @@ This project was developed to illustrate the mechanic of combining two sine wave
 
 A simple game of tug of war. The demo is configued to allow two users to enter their desired wave configuration. Once the wave configuration is locked in the users can use a sensor to aid in getting the boat to the opposite side.
 
-![[https://github.com/mjrevel/blowboat/blob/main/images/blowboat1.png?raw=true]]
+![Blow Boat gameplay](https://github.com/mjrevel/blowboat/blob/main/images/blowboat1.png?raw=true)
 
 Resources and Inspiration:
 
