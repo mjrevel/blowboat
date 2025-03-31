@@ -1,9 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://b1hpa3kij1vb7"]
+[gd_scene load_steps=17 format=3 uid="uid://b1hpa3kij1vb7"]
 
 [ext_resource type="Script" path="res://ocean.gd" id="1_4hhkq"]
 [ext_resource type="Shader" path="res://water.gdshader" id="2_bb1ww"]
 [ext_resource type="Script" path="res://water.gd" id="3_tj3eo"]
+[ext_resource type="Script" path="res://wave_line.gd" id="4_6obuo"]
 [ext_resource type="PackedScene" uid="uid://dtudsdckvhfi1" path="res://player.tscn" id="4_r7j02"]
+[ext_resource type="Script" path="res://expression.gd" id="5_ml3rf"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mirtv"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -20,11 +22,16 @@ tonemap_mode = 2
 glow_enabled = true
 fog_sun_scatter = 2.25
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_f5op1"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_qflmd"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_f5op1")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_of3cw"]
 render_priority = 0
 shader = ExtResource("2_bb1ww")
 shader_parameter/w = 0.5
-shader_parameter/resolution = null
 shader_parameter/noise_scale = 10.0
 shader_parameter/height_scale = 0.001
 shader_parameter/height_map = null
@@ -41,6 +48,19 @@ shader_parameter/wave_2_angfreq = null
 shader_parameter/wave_combined = null
 shader_parameter/cpu_calc = null
 shader_parameter/wave_time = 0.0
+shader_parameter/speed = 0.0
+shader_parameter/color = Color(0.0261492, 0.249301, 0.768316, 1)
+shader_parameter/deep_water = Color(0.259059, 0.49971, 1, 1)
+shader_parameter/beer_law_factor = 2.0
+shader_parameter/_distance = 0.0
+shader_parameter/edge_color = Color(1, 1, 1, 1)
+shader_parameter/edge_scale = 0.25
+shader_parameter/near = 0.1
+shader_parameter/far = 100.0
+shader_parameter/wave_strength = Vector2(0.5, 0.25)
+shader_parameter/wave_frequ = Vector2(12, 12)
+shader_parameter/time_factor = Vector2(1, 2)
+shader_parameter/noise1 = SubResource("NoiseTexture2D_qflmd")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_gjhbn"]
 material = SubResource("ShaderMaterial_of3cw")
@@ -65,10 +85,11 @@ script = ExtResource("1_4hhkq")
 environment = SubResource("Environment_nrdrd")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.142629, -0.748126, -0.648047, 0, -0.654741, 0.755853, -0.989776, -0.107807, -0.093385, 0.0398331, -9.53674e-07, 0.00163651)
+transform = Transform3D(-0.544639, -0.732807, -0.407875, 0, -0.486335, 0.873772, -0.838671, 0.475891, 0.264877, 0, 0, 0)
 shadow_enabled = true
 
 [node name="Water" type="MeshInstance3D" parent="."]
+cast_shadow = 0
 mesh = SubResource("PlaneMesh_gjhbn")
 script = ExtResource("3_tj3eo")
 
@@ -78,56 +99,403 @@ fov = 60.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Node2D" type="Node2D" parent="CanvasLayer"]
-position = Vector2(0, 648)
-
-[node name="Button" type="Button" parent="CanvasLayer/Node2D"]
+[node name="LeftPanel" type="Control" parent="CanvasLayer"]
+layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 128.0
-offset_top = -56.0
-offset_right = 206.0
-offset_bottom = -14.0
+offset_top = -176.0
+offset_right = 480.0
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Line2D" type="Line2D" parent="CanvasLayer/LeftPanel"]
+script = ExtResource("4_6obuo")
+
+[node name="AmpContainer" type="VBoxContainer" parent="CanvasLayer/LeftPanel"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -134.0
+offset_right = 98.0
+offset_bottom = -10.0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftPanel/AmpContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Amplitude"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AmpUpBtn" type="Button" parent="CanvasLayer/LeftPanel/AmpContainer"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/LeftPanel/AmpContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AmpDwnBtn" type="Button" parent="CanvasLayer/LeftPanel/AmpContainer"]
+layout_mode = 2
+text = "v"
+
+[node name="WaveLengthContainer" type="VBoxContainer" parent="CanvasLayer/LeftPanel"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 109.0
+offset_top = -134.0
+offset_right = 201.0
+offset_bottom = -10.0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftPanel/WaveLengthContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Wavelength"
+fit_content = true
+autowrap_mode = 0
+
+[node name="WLUpBtn" type="Button" parent="CanvasLayer/LeftPanel/WaveLengthContainer"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/LeftPanel/WaveLengthContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="WLDwnBtn" type="Button" parent="CanvasLayer/LeftPanel/WaveLengthContainer"]
+layout_mode = 2
+text = "v"
+
+[node name="AngFreqContainer" type="VBoxContainer" parent="CanvasLayer/LeftPanel"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 215.0
+offset_top = -157.0
+offset_right = 303.0
+offset_bottom = -10.0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftPanel/AngFreqContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Angular
+Frequency"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AngUpBtn" type="Button" parent="CanvasLayer/LeftPanel/AngFreqContainer"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/LeftPanel/AngFreqContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AngDwnBtn" type="Button" parent="CanvasLayer/LeftPanel/AngFreqContainer"]
+layout_mode = 2
+text = "v"
+
+[node name="Expression" type="Node2D" parent="CanvasLayer/LeftPanel"]
+position = Vector2(312, 43)
+script = ExtResource("5_ml3rf")
+
+[node name="CenterPanel" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -124.0
+offset_top = -128.0
+offset_right = 124.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="FireBtn" type="Button" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -72.0
+offset_top = -112.0
+offset_right = -8.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Fire"
+
+[node name="TestB1" type="Button" parent="CanvasLayer/CenterPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -122.0
+offset_right = 80.0
+offset_bottom = -80.0
 grow_vertical = 0
 text = "1"
-metadata/_edit_use_anchors_ = true
 
-[node name="Button2" type="Button" parent="CanvasLayer/Node2D"]
+[node name="TestB2" type="Button" parent="CanvasLayer/CenterPanel"]
+visible = false
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 208.0
-offset_top = -56.0
-offset_right = 286.0
-offset_bottom = -14.0
+offset_left = 88.0
+offset_top = -122.0
+offset_right = 152.0
+offset_bottom = -80.0
 grow_vertical = 0
 text = "2"
-metadata/_edit_use_anchors_ = true
 
-[node name="Button3" type="Button" parent="CanvasLayer/Node2D"]
-anchors_preset = 9
+[node name="TestB3" type="Button" parent="CanvasLayer/CenterPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 288.0
-offset_top = -56.0
-offset_right = 366.0
-offset_bottom = -14.0
-grow_vertical = 2
+offset_left = 160.0
+offset_top = -122.0
+offset_right = 224.0
+offset_bottom = -80.0
+grow_vertical = 0
 text = "3"
-metadata/_edit_use_anchors_ = true
 
-[node name="Button4" type="Button" parent="CanvasLayer/Node2D"]
-offset_left = 48.0
-offset_top = -56.0
-offset_right = 112.0
-offset_bottom = -16.0
-text = "Fire"
+[node name="ResetBtn" type="Button" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -112.0
+offset_right = 72.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Reset"
+
+[node name="P2ScoreText" type="RichTextLabel" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -36.0
+offset_right = 52.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+fit_content = true
+
+[node name="P1ScoreText" type="RichTextLabel" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -84.0
+offset_top = -36.0
+offset_right = -44.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "0"
+fit_content = true
+autowrap_mode = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -84.0
+offset_top = -60.0
+offset_right = -12.0
+offset_bottom = -37.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "P1 Score"
+fit_content = true
+autowrap_mode = 0
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/CenterPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -60.0
+offset_right = 84.0
+offset_bottom = -37.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "P2 Score"
+fit_content = true
+autowrap_mode = 0
+
+[node name="RightPanel" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -480.0
+offset_top = -176.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="AmpContainer2" type="VBoxContainer" parent="CanvasLayer/RightPanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -288.0
+offset_top = -132.0
+offset_right = -200.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightPanel/AmpContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Amplitude"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AmpUpBtn" type="Button" parent="CanvasLayer/RightPanel/AmpContainer2"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightPanel/AmpContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AmpDwnBtn" type="Button" parent="CanvasLayer/RightPanel/AmpContainer2"]
+layout_mode = 2
+text = "v"
+
+[node name="WaveLengthContainer2" type="VBoxContainer" parent="CanvasLayer/RightPanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -194.0
+offset_top = -132.0
+offset_right = -102.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightPanel/WaveLengthContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Wavelength"
+fit_content = true
+autowrap_mode = 0
+
+[node name="WLUpBtn" type="Button" parent="CanvasLayer/RightPanel/WaveLengthContainer2"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightPanel/WaveLengthContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="WLDwnBtn" type="Button" parent="CanvasLayer/RightPanel/WaveLengthContainer2"]
+layout_mode = 2
+text = "v"
+
+[node name="AngFreqContainer2" type="VBoxContainer" parent="CanvasLayer/RightPanel"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -96.0
+offset_top = -155.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightPanel/AngFreqContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Angular
+Frequency"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AngUpBtn" type="Button" parent="CanvasLayer/RightPanel/AngFreqContainer2"]
+layout_mode = 2
+text = "^"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightPanel/AngFreqContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "#"
+fit_content = true
+autowrap_mode = 0
+
+[node name="AngDwnBtn" type="Button" parent="CanvasLayer/RightPanel/AngFreqContainer2"]
+layout_mode = 2
+text = "v"
+
+[node name="Expression2" type="Node2D" parent="CanvasLayer/RightPanel"]
+position = Vector2(38, 43)
+script = ExtResource("5_ml3rf")
 
 [node name="Player" parent="." instance=ExtResource("4_r7j02")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.093326, 1.49446, 4.37954)
 
 [node name="island" type="CSGSphere3D" parent="."]
-transform = Transform3D(84.0053, 0, 0, 0, 10.4714, 0, 0, 0, 23.0997, -51.972, -1.92513, -30.9538)
+transform = Transform3D(84.0053, 0, 0, 0, 10.4714, 0, 0, 0, 23.0997, -51.972, -1.92513, -11.0645)
 material = SubResource("StandardMaterial3D_epsh4")
 
 [node name="simplewater" type="MeshInstance3D" parent="."]
@@ -136,7 +504,20 @@ visible = false
 mesh = SubResource("PlaneMesh_qd41y")
 skeleton = NodePath("../Water")
 
-[connection signal="pressed" from="CanvasLayer/Node2D/Button" to="Water" method="_on_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Node2D/Button2" to="Water" method="_on_button_2_pressed"]
-[connection signal="pressed" from="CanvasLayer/Node2D/Button3" to="Water" method="_on_button_3_pressed"]
-[connection signal="pressed" from="CanvasLayer/Node2D/Button4" to="Water" method="_on_button_4_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/AmpContainer/AmpUpBtn" to="Water" method="_on_amp_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/AmpContainer/AmpDwnBtn" to="Water" method="_on_amp_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/WaveLengthContainer/WLUpBtn" to="Water" method="_on_wl_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/WaveLengthContainer/WLDwnBtn" to="Water" method="_on_wl_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/AngFreqContainer/AngUpBtn" to="Water" method="_on_ang_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeftPanel/AngFreqContainer/AngDwnBtn" to="Water" method="_on_ang_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/FireBtn" to="Water" method="_on_button_4_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/TestB1" to="Water" method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/TestB2" to="Water" method="_on_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/TestB3" to="Water" method="_on_button_3_pressed"]
+[connection signal="pressed" from="CanvasLayer/CenterPanel/ResetBtn" to="Water" method="_on_reset_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/AmpContainer2/AmpUpBtn" to="Water" method="_on_amp2_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/AmpContainer2/AmpDwnBtn" to="Water" method="_on_amp2_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/WaveLengthContainer2/WLUpBtn" to="Water" method="_on_wl2_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/WaveLengthContainer2/WLDwnBtn" to="Water" method="_on_wl2_dwn_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/AngFreqContainer2/AngUpBtn" to="Water" method="_on_ang2_up_btn_pressed"]
+[connection signal="pressed" from="CanvasLayer/RightPanel/AngFreqContainer2/AngDwnBtn" to="Water" method="_on_ang2_dwn_btn_pressed"]

@@ -16,6 +16,17 @@ func local_lerp(A: float, B: float, time_now: float, delay: float) -> float:
 		is_complete = false
 	# the current time needs to be stored becaues thats the starting time of the lerp
 	return result
+
+func llerp(value: float, stop_at: float) -> float:
+	var result = stop_at
+	
+	if value > stop_at:
+		result = value
+	else:
+		result = stop_at
+	
+	return result
+
 	
 func map(x: float, in_min: float, in_max: float, out_min: float, out_max: float) :
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
