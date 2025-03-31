@@ -8,7 +8,9 @@ A simple game of tug of war. The demo is configued to allow two users to enter t
 
 Resources and Inspiration:
 [Nvidia GPU Gems - Effective Water Simulation Physical Models](https://developer.nvidia.com/gpugems/gpugems/part-i-natural-effects/chapter-1-effective-water-simulation-physical-models)
+
 [Acerola - How Games Fake Water](https://www.youtube.com/watch?v=PH9q0HNBjT4)
+
 [Crigz Vs Game Dev - How to make things float in Godot 4](https://www.youtube.com/watch?v=_R2KDcAp1YQ)
 
 ## How To Play
